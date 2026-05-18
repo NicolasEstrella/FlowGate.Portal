@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AppRole, appRoleLabels } from '../core/models/app-role';
 import { SessionService } from '../core/services/session.service';
 import { StatusChipComponent } from '../shared/ui/status-chip.component';
+import { ToastHostComponent } from '../shared/toast/toast-host.component';
 
 interface NavigationItem {
   label: string;
@@ -15,7 +16,7 @@ interface NavigationItem {
 @Component({
   selector: 'fg-app-shell',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, StatusChipComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, StatusChipComponent, ToastHostComponent],
   template: `
     <div class="page-shell portal-shell">
       <aside class="portal-shell__sidebar">
@@ -71,6 +72,7 @@ interface NavigationItem {
         </main>
       </section>
     </div>
+    <fg-toast-host></fg-toast-host>
   `
 })
 export class AppShellComponent {
@@ -78,6 +80,18 @@ export class AppShellComponent {
 
   protected readonly navigation = computed(() => {
     const items: NavigationItem[] = [
+      {
+        label: 'Minhas Solicitações',
+        description: 'Acompanhe o status das suas solicitações.',
+        route: '/workspace/requests',
+        visibleFor: [AppRole.StandardUser, AppRole.Admin, AppRole.Approver, AppRole.Finance, AppRole.Legal]
+      },
+      {
+        label: 'Aprovações',
+        description: 'Inbox de aprovações pendentes para o seu perfil.',
+        route: '/workspace/approvals',
+        visibleFor: [AppRole.Approver, AppRole.Finance, AppRole.Legal]
+      },
       {
         label: 'Painel Admin',
         description: 'Visão consolidada de usuários, workflows e saúde da API.',
